@@ -7,7 +7,7 @@
 
         <main class="p-4">
             <!-- ルーティングによって切り替わる画面 -->
-            <slot />
+            <router-view />
         </main>
     </div>
 </template>
