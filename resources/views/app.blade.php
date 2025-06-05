@@ -11,11 +11,12 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
-        @routes
-        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-        @inertiaHead
+        <!--@routes　-->
+        <!-- inertiaHead -->
+        @vite(['resources/js/app.js', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        @inertia
+        <!-- 各ページがマウント -->
+        <div id="app"></div>
     </body>
 </html>

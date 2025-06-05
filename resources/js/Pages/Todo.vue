@@ -8,6 +8,7 @@
 import AppLayout from '../Layouts/AppLayout.vue';
 
 export default {
+    name: 'Todo',
     components: { AppLayout },
 };
 </script>
