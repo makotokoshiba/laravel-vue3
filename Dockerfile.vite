@@ -1,0 +1,20 @@
+# Node イメージを使用（Vite 用）
+FROM node:18
+
+# 作業ディレクトリ
+WORKDIR /app
+
+# 依存ファイルを先にコピー
+COPY package*.json ./
+
+# 依存インストール
+RUN npm install
+
+# ソースコードをコピー
+COPY . .
+
+# ポート解放
+EXPOSE 5173
+
+# 開発サーバー起動
+CMD ["npm", "run", "dev"]
