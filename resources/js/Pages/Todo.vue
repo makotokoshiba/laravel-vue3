@@ -12,9 +12,12 @@
           class="border p-2 rounded"
         />
         <ErrorMessage name="task" class="text-red-500 text-sm mt-1" />
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+        <!-- <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
           追加
-        </button>
+        </button> -->
+        <v-btn type="submit" color="primary" class="ml-2">
+  追加
+</v-btn>
       </div>
     </Form>
 

@@ -6,7 +6,9 @@ import router from './router'
 import AppLayout from './Layouts/AppLayout.vue'
 import { configure, defineRule } from 'vee-validate'
 import { required, email } from '@vee-validate/rules'
-
+import pinia from './stores/pinia'
+import vuetify from './plugins/vuetify'
+console.log('Vuetify loaded:', vuetify)
 // ルールをグローバル登録
 defineRule('required', required)
 defineRule('email', email)
@@ -30,4 +32,6 @@ configure({
 
 createApp(AppLayout)
   .use(router)
+  .use(pinia)
+  .use(vuetify)
   .mount('#app')
