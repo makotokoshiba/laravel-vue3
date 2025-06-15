@@ -12,15 +12,9 @@
           class="border p-2 rounded"
         />
         <ErrorMessage name="task" class="text-red-500 text-sm mt-1" />
-        <!-- <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-          追加
-        </button> -->
-        <v-btn type="submit" color="primary" class="ml-2">
-  追加
-</v-btn>
+        <v-btn type="submit" color="primary" class="ml-2">追加</v-btn>
       </div>
-    </Form>
-
+      
     <ul>
         <li
           v-for="(todo, index) in todos"
@@ -28,15 +22,20 @@
           class="mb-2 flex items-center"
         >
           <span class="flex-1">{{ todo }}</span>
-          <button @click="removeTodo(index)" class="text-red-500">削除</button>
+          <v-btn @click="removeTodo(index)" class="text-red-500">削除</v-btn>
         </li>
       </ul>
+      <div>
+        <v-btn color="green" @click="submitToDatabase">登録</v-btn>
+      </div>
+    </Form>
   </main>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
+import axios from 'axios'
 
 const todos = ref<string[]>([])
 const task = ref<string>('')
@@ -60,6 +59,18 @@ const submitHandler = handleSubmit(onSubmit);
 const removeTodo = (index: number) => {
     todos.value.splice(index, 1)
 }
+
+const submitToDatabase = async () => {
+  try {
+    const response = await axios.post('/api/todos', {
+      todos: todos.value, // 現在の配列を送信
+    })
+    console.log('登録成功', response.data)
+  } catch (error) {
+    console.error('登録失敗', error)
+  }
+}
+
 
 </script>
 
