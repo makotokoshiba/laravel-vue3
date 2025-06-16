@@ -26,7 +26,7 @@
         </li>
       </ul>
       <div>
-        <v-btn color="green" @click="submitToDatabase">登録</v-btn>
+        <v-btn color="green" @click="submitToDatabase" :disabled="todos.length === 0">登録</v-btn>
       </div>
     </Form>
   </main>
@@ -48,7 +48,7 @@ const onSubmit = () => {
   const trimmed = task.value.trim()
   if (trimmed) {
     todos.value.push(trimmed)
-    task.value = null
+    task.value = null;
     
     // フォームリセット リセット後のエラーを回避
     resetForm()
@@ -65,6 +65,8 @@ const submitToDatabase = async () => {
     const response = await axios.post('/api/todos', {
       todos: todos.value, // 現在の配列を送信
     })
+    // 成功したら todos を空にする
+    todos.value = []
     console.log('登録成功', response.data)
   } catch (error) {
     console.error('登録失敗', error)
