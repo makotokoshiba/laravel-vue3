@@ -8,30 +8,50 @@ import { configure, defineRule } from 'vee-validate'
 import { required, email } from '@vee-validate/rules'
 import pinia from './stores/pinia'
 import vuetify from './plugins/vuetify'
+import axios from '@/plugins/axios'
+import { useAuthStore } from './stores/authStore'
 
-// ルールをグローバル登録
+axios.defaults.withCredentials = true
+axios.defaults.withXSRFToken = true
+axios.defaults.baseURL = 'http://localhost:8000'
+
+// vee-validate ルール設定
 defineRule('required', required)
 defineRule('email', email)
-
-// エラーメッセージと動作を統一設定
 configure({
   generateMessage: (ctx) => {
     const messages = {
       required: `${ctx.field} は必須です`,
       email: `正しいメールアドレスを入力してください`,
     }
-    // ctx.rule.name が messages にあれば返し、なければデフォルト文言を返す
     return messages[ctx.rule?.name] || `${ctx.field} の入力が正しくありません`
   },
   validateOnBlur: true,
   validateOnChange: true,
   validateOnInput: false,
   validateOnModelUpdate: true,
-  validateOnSubmit: true
+  validateOnSubmit: true,
 })
 
-createApp(AppLayout)
-  .use(router)
-  .use(pinia)
-  .use(vuetify)
-  .mount('#app')
+// ✅ すべての処理を非同期でラップ
+;(async () => {
+  // 1. CSRF Cookie を取得
+  await axios.get('/sanctum/csrf-cookie')
+
+  // 2. アプリ初期化
+  const app = createApp(AppLayout)
+  app.use(router).use(pinia).use(vuetify)
+
+  // 3. 認証ユーザーの取得
+  const authStore = useAuthStore()
+  await authStore.fetchUser()
+
+  if (authStore.isAuthenticated) {
+    console.log('ログイン済み')
+  } else {
+    console.log('未ログイン')
+  }
+
+  // 4. アプリをマウント
+  app.mount('#app')
+})()
