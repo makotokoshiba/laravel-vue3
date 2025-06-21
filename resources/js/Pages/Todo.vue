@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
-import axios from 'axios'
+import axios from '@/plugins/axios'
 
 const todos = ref<string[]>([])
 const task = ref<string>('')
