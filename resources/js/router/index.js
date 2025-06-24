@@ -7,7 +7,7 @@ import Login from '../Pages/Login.vue'
 
 const routes = [
     { path: '/login', name: 'login', component: Login },
-    { path: '/home', name: 'home', component: Home, meta: { requiresAuth: true }, },
+    { path: '/home', name: 'home', component: Home },
     { path: '/todo', name: 'todo', component: Todo },
     { path: '/counter', component: Counter },
 ];
@@ -20,11 +20,6 @@ const router = createRouter({
 // グローバルナビゲーションガード
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-
-  if (authStore.user === null) {
-    // 認証情報がまだ取得されていない場合は fetchUser を待つ
-    await authStore.fetchUser()
-  }
 
   if (to.path !== '/login' && !authStore.isAuthenticated) {
     next('/login')

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div>
-      <!-- ナビゲーションバー：ログイン済みのときだけ表示 -->
+      <!-- ナビゲーションバー -->
       <nav v-if="auth.isAuthenticated" class="navbar">
         <router-link to="/home" class="mr-4">Home</router-link>
         <router-link to="/todo">Todo</router-link>
@@ -9,26 +9,23 @@
         <v-btn @click="logout">ログアウト</v-btn>
       </nav>
 
-      <!-- メインコンテンツ -->
-      <div v-if="isLoading" class="loading-screen">
-          Laoding...
-      </div>
-      <div v-else>
-          <!-- 通常のアプリ画面 -->
-          <router-view />
+      <router-view />
+      <div v-if="isLoading || !isReady" class="loading-screen">
+        Loading...
       </div>
     </div>
   </v-app>
 </template>
 
 <script setup lang="ts">
-import axios from '@/plugins/axios'
 import { onMounted, onBeforeUnmount, ref } from 'vue'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
+import axios from '@/plugins/axios'
 import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 const router = useRouter()
+const isReady = ref(false)
 const isLoading = ref(false)
 
 function onLoadingEvent(e: CustomEvent) {
@@ -36,9 +33,20 @@ function onLoadingEvent(e: CustomEvent) {
 }
 
 onMounted(async () => {
-  await axios.get('/sanctum/csrf-cookie')
-  await auth.fetchUser()
   window.addEventListener('loading', onLoadingEvent)
+
+  try {
+    isLoading.value = true
+
+    await axios.get('/sanctum/csrf-cookie')
+    await auth.fetchUser()
+
+  } catch (e) {
+    console.warn('初期処理失敗:', e)
+  } finally {
+    isReady.value = true
+    isLoading.value = false
+  }
 })
 
 onBeforeUnmount(() => {
@@ -47,7 +55,7 @@ onBeforeUnmount(() => {
 
 const logout = async () => {
   await auth.logout()
-  router.push('/login') // ログアウト後のリダイレクト
+  router.push('/login')
 }
 </script>
 
@@ -59,7 +67,7 @@ const logout = async () => {
 .loading-screen {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
   color: white;
   font-size: 2em;
   display: flex;

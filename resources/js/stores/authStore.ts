@@ -5,7 +5,7 @@ import router from '@/router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as null | { name: string; email: string },
+    user: null as null | {id: number; name: string; email: string },
   }),
 
   getters: {
@@ -48,8 +48,8 @@ export const useAuthStore = defineStore('auth', {
         this.user = res.data;
         console.log('fetchUser: user is', this.user)
       } catch (error: any) {
-    console.warn('ユーザー取得失敗', error?.response?.status)
-    this.user = null
+        console.warn('ユーザー取得失敗', error?.response?.status)
+        this.user = null
       }
     },
   },

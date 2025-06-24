@@ -9,11 +9,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-});
-
-
-// API ルートは "api/" プレフィックス付きでアクセスされます（例：/api/todos）
-Route::middleware('api')->group(function () {
+    Route::get('/todos', [TodoController::class, 'index']);
     Route::post('/todos', [TodoController::class, 'store']);
-
 });

@@ -33,25 +33,7 @@ configure({
   validateOnSubmit: true,
 })
 
-// ✅ すべての処理を非同期でラップ
-;(async () => {
-  // 1. CSRF Cookie を取得
-  await axios.get('/sanctum/csrf-cookie')
-
-  // 2. アプリ初期化
   const app = createApp(AppLayout)
   app.use(router).use(pinia).use(vuetify)
-
-  // 3. 認証ユーザーの取得
-  const authStore = useAuthStore()
-  await authStore.fetchUser()
-
-  if (authStore.isAuthenticated) {
-    console.log('ログイン済み')
-  } else {
-    console.log('未ログイン')
-  }
-
-  // 4. アプリをマウント
   app.mount('#app')
-})()
+
