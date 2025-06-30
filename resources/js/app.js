@@ -9,7 +9,6 @@ import { required, email } from '@vee-validate/rules'
 import pinia from './stores/pinia'
 import vuetify from './plugins/vuetify'
 import axios from '@/plugins/axios'
-import { useAuthStore } from './stores/authStore'
 
 axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true

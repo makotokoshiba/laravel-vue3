@@ -20,12 +20,15 @@ class TodoController extends Controller
             'todos' => 'required|array',
             'todos.*' => 'required|string|max:255',
         ]);
-
+logger($request->todos);
         $user = $request->user();
-        foreach ($request->todos as $task) {
+        foreach ($request->todos as $todo) {
             Todo::create([
-                'task' => $task,
+                'task' => $todo->task,
                 'user_id' => $user->id,
+                'content' => $todo->content,
+                'start_date' => $todo->start_time,
+                'end_date' => $todo->end_time,
             ]);
         }
 
